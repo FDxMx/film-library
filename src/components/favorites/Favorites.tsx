@@ -17,11 +17,14 @@ const Favorites = () => {
                 if(favoritesId.length === 0){
                   console.log('NO FAVORITES MOVIES FOUND');
                 } else {
-                    favoritesId.forEach(movieId => {
-                        const url = 'https://api.themoviedb.org/3/movie/movieId?api_key=a74169393e0da3cfbc2c58c5feec63d7'.replace('movieId', movieId);
-                        axios.get(url).then(res => movies.push(res.data));
+                    var promise = new Promise<void>((resolve, reject) => {
+                        favoritesId.forEach(movieId => {
+                            const url = 'https://api.themoviedb.org/3/movie/movieId?api_key=a74169393e0da3cfbc2c58c5feec63d7'.replace('movieId', movieId);
+                            axios.get(url).then(res => movies.push(res.data));
+                        });
+                        resolve();
                     });
-                    setFavorites(movies);
+                    promise.then(() => setFavorites(movies));
                 };
             } catch (err) {
               console.log("Errore nel reperimento dei dati: " + err);
